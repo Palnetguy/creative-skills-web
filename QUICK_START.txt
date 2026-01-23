@@ -1,0 +1,72 @@
+# ⚡ Quick Start - 5 Minutes to Working Google Sheets
+
+## Current Status
+❌ Your `.env` is missing the real service account credentials
+
+## What You Need to Do
+
+### Step 1: Download Your Service Account Key (2 min)
+Go to [Google Cloud Console](https://console.cloud.google.com):
+1. Project → [Your Project]
+2. IAM & Admin → Service Accounts
+3. Click your service account email
+4. Keys tab → Add Key → Create new key → JSON
+5. **A JSON file downloads**
+
+### Step 2: Run Setup Script (1 min)
+In terminal:
+```bash
+node setup-credentials.js
+```
+- Paste your JSON file path
+- Press `y` to confirm
+
+### Step 3: Share Your Sheet (1 min)
+1. Open your Google Sheet
+2. Click Share
+3. Find your service account email in the JSON file (or copy from terminal output)
+4. Paste it, click Editor, then Share
+
+### Step 4: Restart & Test (1 min)
+```bash
+npm run dev:all
+```
+- Go to http://localhost:5173
+- Submit a survey
+- Check your Sheet 🎉
+
+---
+
+## If Setup Script Doesn't Work
+
+### Manual Method:
+1. Open your JSON file
+2. Copy the entire `"private_key"` value (including quotes and newlines)
+3. Open `.env` and paste it as:
+   ```
+   VITE_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nABC123...\n-----END PRIVATE KEY-----\n
+   ```
+4. Make sure there are NO actual line breaks, only `\n` characters
+
+### Verify with:
+```bash
+node check-config.js
+```
+
+---
+
+## Troubleshooting
+
+### "node: command not found"
+- Install Node.js from nodejs.org
+
+### "Cannot find module 'dotenv'"
+- Run: `npm install`
+
+### Still getting errors?
+- Check SETUP_GUIDE.md for detailed steps
+- Ensure all dependencies installed: `npm install`
+
+---
+
+**Need help?** Run: `node check-config.js` to see what's wrong

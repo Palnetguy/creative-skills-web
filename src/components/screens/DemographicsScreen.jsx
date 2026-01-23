@@ -32,8 +32,9 @@ export default function DemographicsScreen({ data, updateData, nextScreen }) {
       await saveToGoogleSheets(completeData);
       console.log("✅ Successfully saved to Google Sheets!");
     } catch (error) {
-      console.error("❌ Google Sheets save error:", error);
-      console.error("Error details:", error.message);
+      // Safely log error details
+      const errorMsg = error?.message || String(error) || "Unknown error";
+      console.error("❌ Google Sheets save error:", errorMsg);
       // Data is still saved to localStorage, so we continue
     }
 
