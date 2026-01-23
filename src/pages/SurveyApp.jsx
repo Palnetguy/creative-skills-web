@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import IntroScreen from "../components/screens/IntroScreen";
 import Q1Screen from "../components/screens/Q1Screen";
 import Q2Screen from "../components/screens/Q2Screen";
@@ -56,6 +56,27 @@ const screenComponents = {
 export default function SurveyApp() {
   const [currentScreenIdx, setCurrentScreenIdx] = useState(0);
   const [surveyData, setSurveyData] = useState({});
+
+  // Initialize Google Sheets on app load
+  useEffect(() => {
+    const initializeGoogleSheets = async () => {
+      try {
+        console.log("🔧 Initializing Google Sheets API...");
+        const module = await import("../services/googleSheets");
+        const { initializeGoogleSheets: init } = module;
+        if (init) {
+          await init();
+          console.log("✅ Google Sheets API initialized successfully");
+        }
+      } catch (error) {
+        console.error(
+          "❌ Failed to initialize Google Sheets API:",
+          error.message,
+        );
+      }
+    };
+    initializeGoogleSheets();
+  }, []);
 
   const currentScreenId = screens[currentScreenIdx];
   const CurrentScreen = screenComponents[currentScreenId];

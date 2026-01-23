@@ -56,12 +56,34 @@ export default function AdminDashboard() {
       return;
     }
 
+    console.log(
+      `📤 Starting batch upload of ${records.length} records to Google Sheets...`,
+    );
+    let successCount = 0;
+    let failCount = 0;
+
     try {
-      for (const record of records.reverse()) {
-        await saveToGoogleSheets(record);
+      const reversed = records.reverse();
+      for (let i = 0; i < reversed.length; i++) {
+        const record = reversed[i];
+        try {
+          console.log(`[${i + 1}/${reversed.length}] Uploading record...`);
+          await saveToGoogleSheets(record);
+          successCount++;
+          console.log(`✅ Record ${i + 1} uploaded successfully`);
+        } catch (error) {
+          failCount++;
+          console.error(`❌ Record ${i + 1} failed:`, error.message);
+        }
       }
-      alert("Successfully uploaded to Google Sheets!");
+      console.log(
+        `\n📊 Upload Summary: ${successCount} succeeded, ${failCount} failed`,
+      );
+      alert(
+        `Upload complete! ${successCount} succeeded, ${failCount} failed. Check console for details.`,
+      );
     } catch (error) {
+      console.error("❌ Batch upload error:", error);
       alert("Error uploading to Google Sheets: " + error.message);
     }
   };

@@ -23,8 +23,21 @@ export default function DemographicsScreen({ data, updateData, nextScreen }) {
     const history = JSON.parse(localStorage.getItem("survey_history") || "[]");
     history.push(completeData);
     localStorage.setItem("survey_history", JSON.stringify(history));
+    console.log("✅ Survey saved to localStorage:", completeData);
 
-    // Google Sheets sync can be done from admin dashboard
+    // Try to save to Google Sheets
+    try {
+      console.log("📤 Attempting to save to Google Sheets...");
+      const module = await import("../services/googleSheets");
+      const { saveToGoogleSheets } = module;
+      await saveToGoogleSheets(completeData);
+      console.log("✅ Successfully saved to Google Sheets!");
+    } catch (error) {
+      console.error("❌ Google Sheets save error:", error);
+      console.error("Error details:", error.message);
+      // Data is still saved to localStorage, so we continue
+    }
+
     setLoading(false);
     nextScreen("end");
   };
