@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { saveToGoogleSheets } from "../services/googleSheets";
 
 export default function DemographicsScreen({ data, updateData, nextScreen }) {
   const [name, setName] = useState(data.name || "");
@@ -25,13 +24,7 @@ export default function DemographicsScreen({ data, updateData, nextScreen }) {
     history.push(completeData);
     localStorage.setItem("survey_history", JSON.stringify(history));
 
-    // Try to save to Google Sheets
-    try {
-      await saveToGoogleSheets(completeData);
-    } catch (error) {
-      console.log("Google Sheets save skipped (not configured):", error);
-    }
-
+    // Google Sheets sync can be done from admin dashboard
     setLoading(false);
     nextScreen("end");
   };
