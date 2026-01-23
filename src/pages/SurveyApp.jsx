@@ -1,23 +1,39 @@
-import React, { useState } from 'react'
-import IntroScreen from '../components/screens/IntroScreen'
-import Q1Screen from '../components/screens/Q1Screen'
-import Q2Screen from '../components/screens/Q2Screen'
-import Q3Screen from '../components/screens/Q3Screen'
-import Q4Screen from '../components/screens/Q4Screen'
-import Q5Screen from '../components/screens/Q5Screen'
-import Q6Screen from '../components/screens/Q6Screen'
-import Q7Screen from '../components/screens/Q7Screen'
-import Q8Screen from '../components/screens/Q8Screen'
-import Q9Screen from '../components/screens/Q9Screen'
-import Q10Screen from '../components/screens/Q10Screen'
-import Q11Screen from '../components/screens/Q11Screen'
-import Q12Screen from '../components/screens/Q12Screen'
-import DemographicsScreen from '../components/screens/DemographicsScreen'
-import EndScreen from '../components/screens/EndScreen'
-import ProgressBar from '../components/ProgressBar'
-import '../styles/survey.css'
+import React, { useState } from "react";
+import IntroScreen from "../components/screens/IntroScreen";
+import Q1Screen from "../components/screens/Q1Screen";
+import Q2Screen from "../components/screens/Q2Screen";
+import Q3Screen from "../components/screens/Q3Screen";
+import Q4Screen from "../components/screens/Q4Screen";
+import Q5Screen from "../components/screens/Q5Screen";
+import Q6Screen from "../components/screens/Q6Screen";
+import Q7Screen from "../components/screens/Q7Screen";
+import Q8Screen from "../components/screens/Q8Screen";
+import Q9Screen from "../components/screens/Q9Screen";
+import Q10Screen from "../components/screens/Q10Screen";
+import Q11Screen from "../components/screens/Q11Screen";
+import Q12Screen from "../components/screens/Q12Screen";
+import DemographicsScreen from "../components/screens/DemographicsScreen";
+import EndScreen from "../components/screens/EndScreen";
+import ProgressBar from "../components/ProgressBar";
+import "../styles/survey.css";
 
-const screens = ['intro', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12', 'demographics', 'end']
+const screens = [
+  "intro",
+  "q1",
+  "q2",
+  "q3",
+  "q4",
+  "q5",
+  "q6",
+  "q7",
+  "q8",
+  "q9",
+  "q10",
+  "q11",
+  "q12",
+  "demographics",
+  "end",
+];
 
 const screenComponents = {
   intro: IntroScreen,
@@ -35,37 +51,37 @@ const screenComponents = {
   q12: Q12Screen,
   demographics: DemographicsScreen,
   end: EndScreen,
-}
+};
 
 export default function SurveyApp() {
-  const [currentScreenIdx, setCurrentScreenIdx] = useState(0)
-  const [surveyData, setSurveyData] = useState({})
+  const [currentScreenIdx, setCurrentScreenIdx] = useState(0);
+  const [surveyData, setSurveyData] = useState({});
 
-  const currentScreenId = screens[currentScreenIdx]
-  const CurrentScreen = screenComponents[currentScreenId]
+  const currentScreenId = screens[currentScreenIdx];
+  const CurrentScreen = screenComponents[currentScreenId];
 
   const nextScreen = (screenId) => {
-    const idx = screens.indexOf(screenId)
+    const idx = screens.indexOf(screenId);
     if (idx !== -1) {
-      setCurrentScreenIdx(idx)
-      window.scrollTo(0, 0)
+      setCurrentScreenIdx(idx);
+      window.scrollTo(0, 0);
     }
-  }
+  };
 
   const updateSurveyData = (key, value) => {
-    setSurveyData(prev => ({ ...prev, [key]: value }))
-  }
+    setSurveyData((prev) => ({ ...prev, [key]: value }));
+  };
 
-  const progress = (currentScreenIdx / (screens.length - 1)) * 100
+  const progress = (currentScreenIdx / (screens.length - 1)) * 100;
 
   return (
     <div className="survey-app">
       <ProgressBar progress={progress} />
-      <CurrentScreen 
+      <CurrentScreen
         data={surveyData}
         updateData={updateSurveyData}
         nextScreen={nextScreen}
       />
     </div>
-  )
+  );
 }

@@ -7,12 +7,14 @@ Your Creative Skills Survey has been completely refactored into a modern **React
 ### ✅ Deliverables
 
 #### 1. **React + Vite Setup**
+
 - Modern build tool (Vite) for fast development and production builds
 - React 19 with hooks for state management
 - Environment variable configuration
 - Production-ready bundle (191KB gzipped)
 
 #### 2. **Component Structure**
+
 - **13 Screen Components** (Q1-Q12, Demographics, End, Intro)
 - **ProgressBar Component** - Shows survey progress
 - **SurveyApp Page** - Main survey flow with state management
@@ -20,7 +22,9 @@ Your Creative Skills Survey has been completely refactored into a modern **React
 - **GoogleSheets Service** - API integration ready
 
 #### 3. **Separate Admin Dashboard**
+
 Access via: `?admin=true` parameter
+
 - ✅ View all collected responses
 - ✅ Download data as CSV
 - ✅ Bulk upload to Google Sheets
@@ -29,6 +33,7 @@ Access via: `?admin=true` parameter
 - ✅ Back button to return to survey
 
 #### 4. **Google Sheets Integration**
+
 - Fully implemented Google Sheets API integration
 - Auto-saves responses to your Google Sheet
 - First-time OAuth authorization
@@ -36,6 +41,7 @@ Access via: `?admin=true` parameter
 - Environment variables for secure credential storage
 
 #### 5. **Styling**
+
 - Beautiful **neumorphic design** (soft shadows & gradients)
 - Responsive mobile-first layout
 - Separate CSS files for survey and admin
@@ -43,6 +49,7 @@ Access via: `?admin=true` parameter
 - Consistent color scheme
 
 #### 6. **Documentation**
+
 - **README.md** - Complete setup guide
 - **QUICKSTART.md** - Quick reference guide
 - **.env.example** - Configuration template
@@ -95,25 +102,31 @@ creative-skills-web-repo/
 ### 🚀 Getting Started
 
 #### 1. Local Development
+
 ```bash
 cd "d:\Web Projects\creative-skills-web-repo"
 npm install
 npm run dev
 ```
+
 Visit: `http://localhost:5173`
 
 #### 2. Access Admin Dashboard
+
 ```
 http://localhost:5173?admin=true
 ```
 
 #### 3. Production Build
+
 ```bash
 npm run build
 ```
+
 Output: `dist/` folder (ready to deploy)
 
 #### 4. Google Sheets Setup (Optional)
+
 1. Update `.env` with Google credentials
 2. Create Google Sheet with headers
 3. Submit a survey - first time asks for permission
@@ -155,23 +168,25 @@ Thank You + Share Options
 
 ### 🔑 Key Features
 
-| Feature | Details |
-|---------|---------|
-| **Data Storage** | localStorage + Google Sheets (optional) |
-| **Admin Access** | Hidden trigger or `?admin=true` |
-| **Export Options** | CSV download or Google Sheets upload |
-| **Responsive** | Mobile-first, works on all devices |
-| **Offline** | Works without internet (stores locally) |
-| **Security** | OAuth for Google Sheets |
-| **Performance** | Fast builds with Vite |
+| Feature            | Details                                 |
+| ------------------ | --------------------------------------- |
+| **Data Storage**   | localStorage + Google Sheets (optional) |
+| **Admin Access**   | Hidden trigger or `?admin=true`         |
+| **Export Options** | CSV download or Google Sheets upload    |
+| **Responsive**     | Mobile-first, works on all devices      |
+| **Offline**        | Works without internet (stores locally) |
+| **Security**       | OAuth for Google Sheets                 |
+| **Performance**    | Fast builds with Vite                   |
 
 ### 📝 Data Structure
 
 Each response includes:
+
 - timestamp, name, age, gender, country
 - q1-q12 answers (single, multi, ratings, text)
 
 Example:
+
 ```javascript
 {
   timestamp: "2026-01-23T10:30:00.000Z",
@@ -194,6 +209,7 @@ Example:
 ### 🌐 Deployment Ready
 
 Choose any hosting:
+
 - **Vercel** (recommended) - automatic deployments
 - **Netlify** - drag & drop or CLI
 - **GitHub Pages** - free static hosting
@@ -202,6 +218,7 @@ Choose any hosting:
 ### 🔐 Google Sheets Config
 
 Update your `.env`:
+
 ```env
 VITE_GOOGLE_CLIENT_ID=your_client_id.apps.googleusercontent.com
 VITE_GOOGLE_SHEET_ID=your_sheet_id_from_url
@@ -241,23 +258,24 @@ See `README.md` for detailed setup steps.
 
 ## Comparison: Before vs After
 
-| Aspect | Before (HTML) | After (React Vite) |
-|--------|--------------|-------------------|
-| **Framework** | Vanilla JS | React 19 |
-| **Build Tool** | None | Vite |
-| **File Size** | 1 file (3KB) | Multiple files (191KB gzipped) |
-| **Components** | Single file | 14+ reusable components |
-| **State Management** | Plain object | React Hooks |
-| **Admin Interface** | Hidden toggle | Separate page |
-| **Development** | Manual reload | Hot module reload |
-| **Scalability** | Limited | Excellent |
-| **Maintainability** | Moderate | High |
+| Aspect               | Before (HTML) | After (React Vite)             |
+| -------------------- | ------------- | ------------------------------ |
+| **Framework**        | Vanilla JS    | React 19                       |
+| **Build Tool**       | None          | Vite                           |
+| **File Size**        | 1 file (3KB)  | Multiple files (191KB gzipped) |
+| **Components**       | Single file   | 14+ reusable components        |
+| **State Management** | Plain object  | React Hooks                    |
+| **Admin Interface**  | Hidden toggle | Separate page                  |
+| **Development**      | Manual reload | Hot module reload              |
+| **Scalability**      | Limited       | Excellent                      |
+| **Maintainability**  | Moderate      | High                           |
 
 ---
 
 ## 🎉 You're All Set!
 
 The project is now a modern, scalable React application with:
+
 - ✅ Separate survey and admin interfaces
 - ✅ Google Sheets integration ready
 - ✅ Production-optimized build

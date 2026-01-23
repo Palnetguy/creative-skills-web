@@ -1,46 +1,48 @@
-import React, { useState } from 'react'
-import { saveToGoogleSheets } from '../services/googleSheets'
+import React, { useState } from "react";
+import { saveToGoogleSheets } from "../services/googleSheets";
 
 export default function DemographicsScreen({ data, updateData, nextScreen }) {
-  const [name, setName] = useState(data.name || '')
-  const [age, setAge] = useState(data.age || '')
-  const [gender, setGender] = useState(data.gender || '')
-  const [country, setCountry] = useState(data.country || '')
-  const [loading, setLoading] = useState(false)
+  const [name, setName] = useState(data.name || "");
+  const [age, setAge] = useState(data.age || "");
+  const [gender, setGender] = useState(data.gender || "");
+  const [country, setCountry] = useState(data.country || "");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setLoading(true)
+    setLoading(true);
 
     const completeData = {
       ...data,
       timestamp: new Date().toISOString(),
-      name: name || 'Anonymous',
-      age: age || 'N/A',
-      gender: gender || 'N/A',
-      country: country || 'N/A'
-    }
+      name: name || "Anonymous",
+      age: age || "N/A",
+      gender: gender || "N/A",
+      country: country || "N/A",
+    };
 
     // Save to localStorage
-    const history = JSON.parse(localStorage.getItem('survey_history') || '[]')
-    history.push(completeData)
-    localStorage.setItem('survey_history', JSON.stringify(history))
+    const history = JSON.parse(localStorage.getItem("survey_history") || "[]");
+    history.push(completeData);
+    localStorage.setItem("survey_history", JSON.stringify(history));
 
     // Try to save to Google Sheets
     try {
-      await saveToGoogleSheets(completeData)
+      await saveToGoogleSheets(completeData);
     } catch (error) {
-      console.log('Google Sheets save skipped (not configured):', error)
+      console.log("Google Sheets save skipped (not configured):", error);
     }
 
-    setLoading(false)
-    nextScreen('end')
-  }
+    setLoading(false);
+    nextScreen("end");
+  };
 
   return (
     <div className="screen-container">
       <h1>About You</h1>
-      <p className="subtitle">Optional - helps us understand our audience better</p>
-      
+      <p className="subtitle">
+        Optional - helps us understand our audience better
+      </p>
+
       <input
         type="text"
         value={name}
@@ -48,7 +50,7 @@ export default function DemographicsScreen({ data, updateData, nextScreen }) {
         placeholder="Name (Optional)"
         className="input-field"
       />
-      
+
       <input
         type="number"
         value={age}
@@ -56,7 +58,7 @@ export default function DemographicsScreen({ data, updateData, nextScreen }) {
         placeholder="Age"
         className="input-field"
       />
-      
+
       <select
         value={gender}
         onChange={(e) => setGender(e.target.value)}
@@ -68,7 +70,7 @@ export default function DemographicsScreen({ data, updateData, nextScreen }) {
         <option value="Non-Binary">Non-Binary</option>
         <option value="Prefer not to say">Prefer not to say</option>
       </select>
-      
+
       <input
         type="text"
         value={country}
@@ -76,14 +78,10 @@ export default function DemographicsScreen({ data, updateData, nextScreen }) {
         placeholder="Country"
         className="input-field"
       />
-      
-      <button 
-        className="btn-primary" 
-        onClick={handleSubmit}
-        disabled={loading}
-      >
-        {loading ? 'Submitting...' : 'Submit Survey'}
+
+      <button className="btn-primary" onClick={handleSubmit} disabled={loading}>
+        {loading ? "Submitting..." : "Submit Survey"}
       </button>
     </div>
-  )
+  );
 }

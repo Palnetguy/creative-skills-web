@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
 export default function Q10Screen({ data, updateData, nextScreen }) {
-  const [text, setText] = useState(data.q10 || '')
+  const [text, setText] = useState(data.q10 || "");
 
   const handleNext = () => {
-    updateData('q10', text)
-    nextScreen('q11')
-  }
+    updateData("q10", text);
+    nextScreen("q11");
+  };
 
   return (
     <div className="screen-container">
@@ -21,5 +21,5 @@ export default function Q10Screen({ data, updateData, nextScreen }) {
         Next
       </button>
     </div>
-  )
+  );
 }

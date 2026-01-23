@@ -62,17 +62,20 @@ creative-skills-web-repo/
 The app stores data in browser's localStorage. To auto-save to Google Sheets:
 
 ### 1. Get Credentials
+
 - Google Cloud Console: https://console.cloud.google.com
 - Create OAuth 2.0 Client ID (Web Application)
 - Enable Google Sheets API
 - Create API Key
 
 ### 2. Create Google Sheet
+
 - Go to https://sheets.google.com
 - Create new sheet named "Creative Skills Survey Responses"
 - Add headers in row 1
 
 ### 3. Update .env
+
 ```env
 VITE_GOOGLE_CLIENT_ID=your_client_id.apps.googleusercontent.com
 VITE_GOOGLE_SHEET_ID=your_sheet_id
@@ -80,6 +83,7 @@ VITE_GOOGLE_API_KEY=your_api_key
 ```
 
 ### 4. Start Using
+
 - Submit a survey response
 - First time: authorize Google access
 - Future submissions: auto-save silently
@@ -107,24 +111,28 @@ Export (CSV) or Upload (Google Sheets)
 ## Deployment Options
 
 ### Vercel (Recommended)
+
 ```bash
 npm install -g vercel
 vercel
 ```
 
 ### Netlify
+
 ```bash
 npm install -g netlify-cli
 netlify deploy --prod --dir=dist
 ```
 
 ### GitHub Pages
+
 ```bash
 npm run build
 # Push dist/ folder to gh-pages branch
 ```
 
 ### Traditional Server
+
 ```bash
 npm run build
 # Upload dist/ folder to your server
@@ -140,6 +148,7 @@ VITE_GOOGLE_API_KEY=production_api_key
 ```
 
 ⚠️ **Security Note**: Never commit `.env` file with real credentials. Use:
+
 - Vercel: Project Settings → Environment Variables
 - Netlify: Site Settings → Build & Deploy → Environment
 - GitHub: Settings → Secrets → Actions
@@ -169,36 +178,40 @@ npm run lint
 
 ## Key Differences from HTML Version
 
-| Feature | HTML | React Vite |
-|---------|------|-----------|
-| Build Tool | None | Vite |
-| Framework | Vanilla JS | React |
-| Components | Single file | 14+ files |
-| State | Object | React Hooks |
-| Admin | Hidden | Separate page |
-| Dev Server | Manual | Live reload |
-| Build Size | 3KB | 191KB (gzipped) |
-| Performance | Fast | Faster |
+| Feature     | HTML        | React Vite      |
+| ----------- | ----------- | --------------- |
+| Build Tool  | None        | Vite            |
+| Framework   | Vanilla JS  | React           |
+| Components  | Single file | 14+ files       |
+| State       | Object      | React Hooks     |
+| Admin       | Hidden      | Separate page   |
+| Dev Server  | Manual      | Live reload     |
+| Build Size  | 3KB         | 191KB (gzipped) |
+| Performance | Fast        | Faster          |
 
 ## Troubleshooting
 
 ### Port 5173 already in use?
+
 ```bash
 npm run dev -- --port 3000
 ```
 
 ### Google Sheets not connecting?
+
 1. Check `.env` values
 2. Verify Google APIs are enabled
 3. Check browser console (F12)
 4. Try incognito/private mode
 
 ### Admin dashboard blank?
+
 - Make sure localStorage has data
 - Check `?admin=true` parameter
 - Open developer console for errors
 
 ### Build errors?
+
 ```bash
 # Clear and reinstall
 rm -r node_modules package-lock.json
@@ -223,6 +236,7 @@ npm run build
 ## Support
 
 For issues:
+
 1. Check browser console (F12)
 2. Review .env configuration
 3. Check GitHub issues
