@@ -9,7 +9,12 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:3000", /vercel\.app$/],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 // Google Sheets configuration
@@ -109,14 +114,73 @@ app.post("/api/sheets/append", async (req, res) => {
   }
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log("📊 Ready to save survey data to Google Sheets");
-  console.log(
-    "🔍 Check http://localhost:${PORT}/health for configuration status",
-  );
-  if (authError) {
-    console.error(authError);
+// Fetch all data from Google Sheets
+app.get("/api/sheets/data", async (req, res) => {
+  try {
+    // Check configuration
+    if (!SHEET_ID) {
+      return res.status(500).json({ error: "SHEET_ID not configured" });
+    }
+
+    if (authError) {
+      return res.status(500).json({ error: authError });
+    }
+
+    if (!auth) {
+      return res.status(500).json({
+        error: "Service account not initialized. Check .env credentials.",
+      });
+    }
+
+    console.log("📖 Fetching data from Google Sheets...");
+
+    const response = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId: SHEET_ID,
+      range: "Sheet1!A:Z",
+    });
+
+    const rows = response.data.values || [];
+
+    if (rows.length === 0) {
+      return res.json({ success: true, data: [] });
+    }
+
+    // Assume first row is headers, convert to objects
+    const headers = rows[0];
+    const dataRows = rows.slice(1).map((row) => {
+      const obj = {};
+      headers.forEach((header, index) => {
+        obj[header] = row[index] || "";
+      });
+      return obj;
+    });
+
+    console.log(`✅ Retrieved ${dataRows.length} records from Google Sheets`);
+    console.log("📋 Sample record:", JSON.stringify(dataRows[0], null, 2));
+    res.json({ success: true, data: dataRows });
+  } catch (error) {
+    console.error("❌ Error fetching from Google Sheets:", error.message);
+    res.status(500).json({
+      error: error.message || "Failed to fetch from Google Sheets",
+    });
   }
 });
+
+// Export for Vercel
+export default app;
+
+// Local development
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log("📊 Ready to save survey data to Google Sheets");
+    console.log(
+      `🔍 Check http://localhost:${PORT}/health for configuration status`,
+    );
+    if (authError) {
+      console.error(authError);
+    }
+  });
+}

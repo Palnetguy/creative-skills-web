@@ -26,7 +26,7 @@ export default function DemographicsScreen({ data, updateData, nextScreen }) {
     localStorage.setItem("survey_history", JSON.stringify(history));
     console.log("✅ Survey saved to localStorage:", completeData);
 
-    // Try to save to Google Sheets
+    // Auto-sync to Google Sheets in background
     try {
       console.log("📤 Attempting to save to Google Sheets...");
       await saveToGoogleSheets(completeData);
@@ -35,6 +35,7 @@ export default function DemographicsScreen({ data, updateData, nextScreen }) {
       // Safely log error details
       const errorMsg = error?.message || String(error) || "Unknown error";
       console.error("❌ Google Sheets save error:", errorMsg);
+      console.warn("ℹ️ Data saved to localStorage. Admin can sync later.");
       // Data is still saved to localStorage, so we continue
     }
 

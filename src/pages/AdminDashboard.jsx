@@ -1,19 +1,61 @@
 import React, { useState, useEffect } from "react";
 import "../styles/admin.css";
 import { saveToGoogleSheets } from "../services/googleSheets";
+import { fetchFromGoogleSheets } from "../services/sheetsRead";
+import {
+  formatTimestamp,
+  getSurveyAnswerPreview,
+  getDemographicsText,
+  getCompletionStatus,
+  getEmoji,
+} from "../utils/formatSurvey";
 
 export default function AdminDashboard() {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [dataSource, setDataSource] = useState("sheets"); // "sheets" or "local"
+  const [lastSynced, setLastSynced] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     loadRecords();
-  }, []);
+  }, [dataSource]);
 
-  const loadRecords = () => {
-    const history = JSON.parse(localStorage.getItem("survey_history") || "[]");
-    setRecords(history.reverse());
-    setLoading(false);
+  const loadRecords = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      if (dataSource === "sheets") {
+        // Try to load from Google Sheets
+        const sheetsData = await fetchFromGoogleSheets();
+        setRecords(sheetsData.reverse());
+        setLastSynced(new Date().toLocaleTimeString());
+        console.log("✅ Loaded from Google Sheets");
+      } else {
+        // Load from localStorage
+        const history = JSON.parse(
+          localStorage.getItem("survey_history") || "[]",
+        );
+        setRecords(history.reverse());
+        console.log("✅ Loaded from localStorage");
+      }
+    } catch (err) {
+      console.error("Error loading records:", err);
+      setError(err.message || "Failed to load data");
+
+      // Fallback to localStorage if Google Sheets fails
+      if (dataSource === "sheets") {
+        console.log("⚠️ Falling back to localStorage...");
+        const history = JSON.parse(
+          localStorage.getItem("survey_history") || "[]",
+        );
+        setRecords(history.reverse());
+        setDataSource("local");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const downloadAllCSV = () => {
@@ -99,10 +141,6 @@ export default function AdminDashboard() {
     }
   };
 
-  const goToSurvey = () => {
-    window.location.href = "/";
-  };
-
   return (
     <div className="admin-dashboard">
       <div className="admin-header">
@@ -110,6 +148,27 @@ export default function AdminDashboard() {
         <p className="subtitle">
           {records.length} response{records.length !== 1 ? "s" : ""} collected
         </p>
+
+        <div className="data-source-info">
+          <div className="source-toggle">
+            <button
+              className={`source-btn ${dataSource === "sheets" ? "active" : ""}`}
+              onClick={() => setDataSource("sheets")}
+            >
+              ☁️ Google Sheets
+            </button>
+            <button
+              className={`source-btn ${dataSource === "local" ? "active" : ""}`}
+              onClick={() => setDataSource("local")}
+            >
+              💾 Local Storage
+            </button>
+          </div>
+          {lastSynced && dataSource === "sheets" && (
+            <p className="sync-time">Last synced: {lastSynced}</p>
+          )}
+          {error && <p className="error-message">⚠️ {error}</p>}
+        </div>
       </div>
 
       <div className="records-container">
@@ -119,31 +178,88 @@ export default function AdminDashboard() {
           <p className="no-records">No survey responses collected yet.</p>
         ) : (
           <div className="records-grid">
-            {records.map((record, i) => (
-              <div key={i} className="record-card">
-                <strong>#{records.length - i}</strong>
-                <p className="record-name">{record.name || "Anonymous"}</p>
-                <p className="record-meta">
-                  {record.age ? `Age: ${record.age}` : ""}
-                  {record.country ? ` • ${record.country}` : ""}
-                </p>
-                <p className="record-time">
-                  {new Date(record.timestamp).toLocaleString()}
-                </p>
-              </div>
-            ))}
+            {records.map((record, i) => {
+              const status = getCompletionStatus(record);
+              const emoji = getEmoji(status.percentage);
+              const demographics = getDemographicsText(record);
+              const answerPreview = getSurveyAnswerPreview(record);
+
+              // Case-insensitive lookups
+              const timestampKey = Object.keys(record).find(
+                (k) => k.toLowerCase() === "timestamp",
+              );
+              const nameKey = Object.keys(record).find(
+                (k) => k.toLowerCase() === "name",
+              );
+
+              const timestamp = formatTimestamp(
+                timestampKey ? record[timestampKey] : record.timestamp,
+              );
+              const name = nameKey
+                ? record[nameKey]
+                : record.name || "Anonymous";
+
+              return (
+                <div key={i} className="record-card">
+                  <div className="card-header">
+                    <span className="card-number">#{records.length - i}</span>
+                    <span className="completion-badge">
+                      {emoji} {status.percentage}%
+                    </span>
+                  </div>
+
+                  <div className="card-content">
+                    <h3 className="respondent-name">
+                      {name && name !== "Anonymous" ? name : "Anonymous"}
+                    </h3>
+
+                    {demographics !== "No demographics" && (
+                      <p className="respondent-demographics">{demographics}</p>
+                    )}
+
+                    {answerPreview && (
+                      <p className="answer-preview">
+                        <span className="preview-label">Insights:</span>
+                        {answerPreview}
+                      </p>
+                    )}
+
+                    <p className="response-time">
+                      <span className="time-icon">⏱️</span>
+                      {timestamp}
+                    </p>
+                  </div>
+
+                  <div className="card-footer">
+                    <span className="question-count">
+                      {status.answered}/{status.total} questions
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
 
       <div className="admin-actions">
+        <button
+          className="btn btn-primary"
+          onClick={loadRecords}
+          disabled={loading}
+        >
+          🔄 Refresh Data
+        </button>
         <button className="btn btn-primary" onClick={downloadAllCSV}>
           📥 Download as CSV
         </button>
         <button className="btn btn-success" onClick={downloadToGoogleSheets}>
           ☁️ Upload to Google Sheets
         </button>
-        <button className="btn btn-secondary" onClick={goToSurvey}>
+        <button
+          className="btn btn-secondary"
+          onClick={() => (window.location.href = "/")}
+        >
           ← Back to Survey
         </button>
         <button className="btn btn-danger" onClick={clearData}>
