@@ -167,16 +167,20 @@ app.get("/api/sheets/data", async (req, res) => {
   }
 });
 
+// Import path for static file serving
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 // Serve static files (frontend build) in production
 if (process.env.NODE_ENV === "production") {
-  import("path").then(({ default: path }) => {
-    const __dirname = path.resolve();
-    app.use(express.static(path.join(__dirname, "dist")));
+  app.use(express.static(path.join(__dirname, "dist")));
 
-    // Serve index.html for all non-API routes (SPA support)
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(__dirname, "dist", "index.html"));
-    });
+  // Serve index.html for all non-API routes (SPA support)
+  // This must be AFTER all API routes
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "dist", "index.html"));
   });
 }
 
