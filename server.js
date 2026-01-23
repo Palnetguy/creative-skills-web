@@ -175,12 +175,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Serve static files (frontend build) in production
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "dist")));
+  // Static middleware only for non-API routes
+  app.use((req, res, next) => {
+    if (req.path.startsWith("/api")) {
+      return next(); // Skip static serving for API routes
+    }
+    express.static(path.join(__dirname, "dist"))(req, res, next);
+  });
 
   // Serve index.html for all non-API routes (SPA support)
-  // This must be AFTER all API routes
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "dist", "index.html"));
+    if (!req.path.startsWith("/api")) {
+      res.sendFile(path.join(__dirname, "dist", "index.html"));
+    }
   });
 }
 
