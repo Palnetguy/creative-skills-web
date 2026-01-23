@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { saveToGoogleSheets } from "../../services/googleSheets";
 
 export default function DemographicsScreen({ data, updateData, nextScreen }) {
   const [name, setName] = useState(data.name || "");
@@ -28,8 +29,6 @@ export default function DemographicsScreen({ data, updateData, nextScreen }) {
     // Try to save to Google Sheets
     try {
       console.log("📤 Attempting to save to Google Sheets...");
-      const module = await import("../services/googleSheets");
-      const { saveToGoogleSheets } = module;
       await saveToGoogleSheets(completeData);
       console.log("✅ Successfully saved to Google Sheets!");
     } catch (error) {

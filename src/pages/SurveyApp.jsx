@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { initializeGoogleSheets } from "../services/googleSheets";
 import IntroScreen from "../components/screens/IntroScreen";
 import Q1Screen from "../components/screens/Q1Screen";
 import Q2Screen from "../components/screens/Q2Screen";
@@ -59,13 +60,11 @@ export default function SurveyApp() {
 
   // Initialize Google Sheets on app load
   useEffect(() => {
-    const initializeGoogleSheets = async () => {
+    const initGoogleSheetsAPI = async () => {
       try {
         console.log("🔧 Initializing Google Sheets API...");
-        const module = await import("../services/googleSheets");
-        const { initializeGoogleSheets: init } = module;
-        if (init) {
-          await init();
+        if (initializeGoogleSheets) {
+          await initializeGoogleSheets();
           console.log("✅ Google Sheets API initialized successfully");
         }
       } catch (error) {
@@ -75,7 +74,7 @@ export default function SurveyApp() {
         );
       }
     };
-    initializeGoogleSheets();
+    initGoogleSheetsAPI();
   }, []);
 
   const currentScreenId = screens[currentScreenIdx];
