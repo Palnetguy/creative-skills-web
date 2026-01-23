@@ -95,7 +95,7 @@ Go to **Project Settings** → **Environment Variables**:
 ```
 VITE_GOOGLE_SHEET_ID = your_sheet_id
 VITE_SERVICE_ACCOUNT_EMAIL = your_email@project.iam.gserviceaccount.com
-VITE_PRIVATE_KEY = -----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n
+VITE_PRIVATE_KEY = sample
 ```
 
 **After deployment**, you'll get a URL like: `https://your-project.vercel.app`
