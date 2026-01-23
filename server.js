@@ -167,6 +167,21 @@ app.get("/api/sheets/data", async (req, res) => {
   }
 });
 
+// Serve static files (frontend build) in production
+if (process.env.NODE_ENV === "production") {
+  import("path").then(({ default: path }) => {
+    import("url").then(({ fileURLToPath }) => {
+      const __dirname = path.dirname(fileURLToPath(import.meta.url));
+      app.use(express.static(path.join(__dirname, "dist")));
+      
+      // Serve index.html for all non-API routes (SPA support)
+      app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "dist", "index.html"));
+      });
+    });
+  });
+}
+
 // Export for Vercel
 export default app;
 

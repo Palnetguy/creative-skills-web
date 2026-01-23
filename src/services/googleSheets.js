@@ -2,6 +2,7 @@
 const GOOGLE_CONFIG = {
   SHEET_ID: import.meta.env.VITE_GOOGLE_SHEET_ID || "YOUR_GOOGLE_SHEET_ID_HERE",
   API_KEY: import.meta.env.VITE_GOOGLE_API_KEY || "YOUR_API_KEY_HERE",
+  // Use relative URL so it works on any domain (localhost, Vercel, custom domain)
   BACKEND_URL: import.meta.env.VITE_BACKEND_URL || "http://localhost:3001",
 };
 
@@ -27,12 +28,10 @@ export function initGoogleSheets() {
 
 // Save data to Google Sheets via backend server
 export async function saveToGoogleSheets(data) {
-  const BACKEND_URL =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+  // Use relative URL - works on localhost:3001 and any Vercel domain
+  const BACKEND_URL = "/api";
 
-  console.log("🔍 Google Sheets Config Check:", {
-    backendUrl: BACKEND_URL,
-  });
+  console.log("🔍 Saving to Google Sheets via backend API...");
 
   try {
     console.log("📝 Converting data to sheet row...");
@@ -40,7 +39,7 @@ export async function saveToGoogleSheets(data) {
 
     console.log("📤 Sending to backend server...");
 
-    const response = await fetch(`${BACKEND_URL}/api/sheets/append`, {
+    const response = await fetch(`${BACKEND_URL}/sheets/append`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

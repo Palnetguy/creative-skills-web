@@ -1,13 +1,12 @@
 // Google Sheets Data Service - for reading data from the sheet
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+// Use relative URL - works on localhost:3001 and any Vercel domain
 
 // Fetch all records from Google Sheets
 export async function fetchFromGoogleSheets() {
   console.log("📖 Fetching survey data from Google Sheets...");
 
   try {
-    const response = await fetch(`${BACKEND_URL}/api/sheets/data`);
+    const response = await fetch("/api/sheets/data");
 
     if (!response.ok) {
       const errorData = await response.json();
