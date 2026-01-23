@@ -11,5 +11,13 @@ export default defineConfig({
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },
+    // Proxy API requests to backend server in development
+    proxy: {
+      "/api": {
+        target: "http://localhost:3001",
+        changeOrigin: true,
+        rewrite: (path) => path,
+      },
+    },
   },
 });
