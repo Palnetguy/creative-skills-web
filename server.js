@@ -2,11 +2,14 @@ import express from "express";
 import cors from "cors";
 import { google } from "googleapis";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Middleware
 app.use(
@@ -166,12 +169,6 @@ app.get("/api/sheets/data", async (req, res) => {
     });
   }
 });
-
-// Import path for static file serving
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Serve static files (frontend build) in production
 if (process.env.NODE_ENV === "production") {
